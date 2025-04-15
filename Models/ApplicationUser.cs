@@ -10,7 +10,8 @@ namespace CollegeTrackAPI.Models
             FullName = string.Empty; // Or provide a default value
         }
 
-        public string FullName { get; set; } // Make sure it's initialized
+        public string FullName { get; set; } // Custom property
+        public string NationalId { get; set; } // Add NationalId to store in AspNetUsers
     }
 
 }

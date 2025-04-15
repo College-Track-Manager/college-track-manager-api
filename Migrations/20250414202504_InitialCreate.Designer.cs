@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CollegeTrackAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250414193324_InitialCreate")]
+    [Migration("20250414202504_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -47,6 +47,10 @@ namespace CollegeTrackAPI.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("NationalId")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("NormalizedEmail")
@@ -341,6 +345,12 @@ namespace CollegeTrackAPI.Migrations
                     b.Property<string>("Track")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("TrackDegree")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TrackType")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("TranscriptPath")
                         .IsRequired()

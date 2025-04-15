@@ -46,6 +46,10 @@ namespace CollegeTrackAPI.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("NationalId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
@@ -338,6 +342,12 @@ namespace CollegeTrackAPI.Migrations
                     b.Property<string>("Track")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("TrackDegree")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TrackType")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("TranscriptPath")
                         .IsRequired()

@@ -1,3 +1,4 @@
+using CollegeTrackAPI.Models;
 using System.ComponentModel.DataAnnotations;
 
 public class StudentRegistration
@@ -18,6 +19,17 @@ public class StudentRegistration
 
     [Required]
     public string Address { get; set; } = "";
+
+    [Required]
+    public TrackTypeEnum TrackType { get; set; } = TrackTypeEnum.Academic; // Default is Academic
+
+    // Using the enum for TrackDegree
+    [Required]
+    public TrackDegreeEnum TrackDegree { get; set; } = TrackDegreeEnum.Diploma; // Default is Diploma
+
+    [Required]
+    public StudyType StudyType { get; set; } 
+
 
     [Required]
     public string Track { get; set; } = "";

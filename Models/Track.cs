@@ -10,6 +10,7 @@ namespace CollegeTrackAPI.Models
         Professional = 2
     }
 
+
     // Enum for TrackDegree
     public enum TrackDegreeEnum
     {
@@ -18,6 +19,12 @@ namespace CollegeTrackAPI.Models
         PhD = 3
     }
 
+    public enum StudyType
+    {
+        Offline = 1,
+        Online = 2
+
+    }
     public class Course
     {
         [Key]

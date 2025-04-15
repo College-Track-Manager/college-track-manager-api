@@ -31,6 +31,7 @@ namespace CollegeTrackAPI.Migrations
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
                     FullName = table.Column<string>(type: "TEXT", nullable: false),
+                    NationalId = table.Column<string>(type: "TEXT", nullable: false),
                     UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
@@ -62,6 +63,8 @@ namespace CollegeTrackAPI.Migrations
                     Email = table.Column<string>(type: "TEXT", nullable: false),
                     Phone = table.Column<string>(type: "TEXT", nullable: false),
                     Address = table.Column<string>(type: "TEXT", nullable: false),
+                    TrackType = table.Column<int>(type: "INTEGER", nullable: false),
+                    TrackDegree = table.Column<int>(type: "INTEGER", nullable: false),
                     Track = table.Column<string>(type: "TEXT", nullable: false),
                     Education = table.Column<string>(type: "TEXT", nullable: false),
                     Statement = table.Column<string>(type: "TEXT", nullable: false),

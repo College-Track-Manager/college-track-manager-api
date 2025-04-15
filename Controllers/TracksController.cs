@@ -16,11 +16,19 @@ public class TracksController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Track>>> GetTracks()
+    public async Task<ActionResult<IEnumerable<Track>>> GetTracks([FromQuery] TrackTypeEnum? trackType)
     {
-        var tracks = await _context.Tracks
-            .Include(t => t.Courses)
-            .ToListAsync();
+        // Build the query to fetch tracks
+        IQueryable<Track> query = _context.Tracks.Include(t => t.Courses);
+
+        // If TrackType is provided, filter the tracks by TrackType
+        if (trackType.HasValue)
+        {
+            query = query.Where(t => t.TrackType == trackType.Value);
+        }
+
+        // Execute the query and get the result
+        var tracks = await query.ToListAsync();
 
         return Ok(tracks);
     }
