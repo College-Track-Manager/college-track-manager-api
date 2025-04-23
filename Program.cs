@@ -81,7 +81,7 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     // db.Database.Migrate(); // Use this if you are using migrations
-    DbInitializer.Seed(db); // Optional if you want to seed the database with initial data
+    //DbInitializer.Seed(db); // Optional if you want to seed the database with initial data
 }
 
 // Configure the HTTP request pipeline.

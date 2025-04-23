@@ -35,6 +35,9 @@ namespace CollegeTrackAPI.Models
         public string Title { get; set; } = "";
         public string Description { get; set; } = "";
         public int Credits { get; set; }
+        public ICollection<TrackCourse> TrackCourses { get; set; } = new List<TrackCourse>();
+
+
     }
 
     public class Track
@@ -59,6 +62,10 @@ namespace CollegeTrackAPI.Models
         public string Image { get; set; } = "";
 
         public List<string> Requirements { get; set; } = new();
-        public List<Course> Courses { get; set; } = new();
+        public ICollection<TrackCourse> TrackCourses { get; set; } = new List<TrackCourse>();
+
+
+        public ICollection<StudentRegistration> Registrations { get; set; } = new List<StudentRegistration>();
+
     }
 }

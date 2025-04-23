@@ -3,6 +3,7 @@ using System;
 using CollegeTrackAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CollegeTrackAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250423131037_UpdateTrackCourseRelation")]
+    partial class UpdateTrackCourseRelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.4");
@@ -164,19 +167,19 @@ namespace CollegeTrackAPI.Migrations
                     b.ToTable("Tracks");
                 });
 
-            modelBuilder.Entity("CollegeTrackAPI.Models.TrackCourse", b =>
+            modelBuilder.Entity("CourseTrack", b =>
                 {
-                    b.Property<int>("TrackId")
+                    b.Property<int>("CoursesId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("CourseId")
+                    b.Property<int>("TracksId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("TrackId", "CourseId");
+                    b.HasKey("CoursesId", "TracksId");
 
-                    b.HasIndex("CourseId");
+                    b.HasIndex("TracksId");
 
-                    b.ToTable("TrackCourse");
+                    b.ToTable("CourseTrack");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -379,23 +382,19 @@ namespace CollegeTrackAPI.Migrations
                     b.ToTable("Registrations");
                 });
 
-            modelBuilder.Entity("CollegeTrackAPI.Models.TrackCourse", b =>
+            modelBuilder.Entity("CourseTrack", b =>
                 {
-                    b.HasOne("CollegeTrackAPI.Models.Course", "Course")
-                        .WithMany("TrackCourses")
-                        .HasForeignKey("CourseId")
+                    b.HasOne("CollegeTrackAPI.Models.Course", null)
+                        .WithMany()
+                        .HasForeignKey("CoursesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CollegeTrackAPI.Models.Track", "Track")
-                        .WithMany("TrackCourses")
-                        .HasForeignKey("TrackId")
+                    b.HasOne("CollegeTrackAPI.Models.Track", null)
+                        .WithMany()
+                        .HasForeignKey("TracksId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Course");
-
-                    b.Navigation("Track");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -460,16 +459,9 @@ namespace CollegeTrackAPI.Migrations
                     b.Navigation("Track");
                 });
 
-            modelBuilder.Entity("CollegeTrackAPI.Models.Course", b =>
-                {
-                    b.Navigation("TrackCourses");
-                });
-
             modelBuilder.Entity("CollegeTrackAPI.Models.Track", b =>
                 {
                     b.Navigation("Registrations");
-
-                    b.Navigation("TrackCourses");
                 });
 #pragma warning restore 612, 618
         }
