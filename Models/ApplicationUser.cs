@@ -12,6 +12,9 @@ namespace CollegeTrackAPI.Models
 
         public string FullName { get; set; } // Custom property
         public string NationalId { get; set; } // Add NationalId to store in AspNetUsers
+        public string? Address { get; set; } //  Add this
+        public string? Phone { get; set; } //  Add this
+
     }
 
 }

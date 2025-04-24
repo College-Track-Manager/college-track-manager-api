@@ -3,6 +3,7 @@ using System;
 using CollegeTrackAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CollegeTrackAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250424130858_AddAuditLog")]
+    partial class AddAuditLog
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.4");
@@ -101,21 +104,19 @@ namespace CollegeTrackAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Action")
+                    b.Property<DateTime>("ActionTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ActionType")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Details")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("RecordId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("TableName")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("Timestamp")
+                    b.Property<string>("EntityName")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UserEmail")

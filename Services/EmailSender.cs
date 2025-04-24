@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
@@ -6,29 +7,44 @@ namespace CollegeTrackAPI.Services
 {
     public class EmailSender : IEmailSender
     {
-        private readonly string _smtpServer = "smtp.your-email-provider.com"; // Update with your SMTP server
-        private readonly string _smtpUser = "your-email@example.com"; // Update with your email address
-        private readonly string _smtpPassword = "your-email-password"; // Update with your email password
+        private readonly IConfiguration _config;
+
+        public EmailSender(IConfiguration config)
+        {
+            _config = config;
+        }
 
         public async Task SendEmailAsync(string email, string subject, string message)
         {
-            using (var client = new SmtpClient(_smtpServer))
+            var smtpServer = _config["Email:SmtpServer"];
+            var smtpUser = _config["Email:SmtpUser"];
+            var smtpPassword = _config["Email:SmtpPassword"];
+            var smtpPort = int.Parse(_config["Email:SmtpPort"] ?? "587");
+
+            using (var client = new SmtpClient(smtpServer))
             {
-                client.Port = 587; // Standard SMTP port for TLS
-                client.Credentials = new NetworkCredential(_smtpUser, _smtpPassword);
+                client.Port = smtpPort;
+                client.Credentials = new NetworkCredential(smtpUser, smtpPassword);
                 client.EnableSsl = true;
 
                 var mailMessage = new MailMessage
                 {
-                    From = new MailAddress(_smtpUser),
+                    From = new MailAddress(smtpUser),
                     Subject = subject,
                     Body = message,
                     IsBodyHtml = true,
                 };
 
                 mailMessage.To.Add(email);
-
-                await client.SendMailAsync(mailMessage);
+                try
+                {
+                    await client.SendMailAsync(mailMessage);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("EMAIL ERROR: " + ex.Message);
+                    throw;  // or return BadRequest(ex.Message) in your controller
+                }
             }
         }
     }

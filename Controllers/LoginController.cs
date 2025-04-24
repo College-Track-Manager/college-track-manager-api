@@ -6,6 +6,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using CollegeTrackAPI.Models;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Authorization;
+using CollegeTrackAPI.Services;
 
 namespace CollegeTrackAPI.Controllers
 {
@@ -16,12 +18,17 @@ namespace CollegeTrackAPI.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IConfiguration _configuration;
+        private readonly IEmailSender _emailSender; // Add this line
+        private readonly AuditService _auditService;
 
-        public LoginController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IConfiguration configuration)
+        public LoginController(AuditService auditService, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IConfiguration configuration, IEmailSender emailSender)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _configuration = configuration;
+            _emailSender = emailSender; // Assign it
+            _auditService = auditService;
+
         }
 
         // POST api/login/login
@@ -42,7 +49,7 @@ namespace CollegeTrackAPI.Controllers
                 user = await _userManager.FindByEmailAsync(model.Username);
             }
 
-            if (user == null) 
+            if (user == null)
             {
                 // If user does not exist, return Unauthorized
                 return Unauthorized(new { message = "User not found." });
@@ -56,48 +63,53 @@ namespace CollegeTrackAPI.Controllers
                 return Unauthorized(new { message = "Invalid password." });
             }
 
+            await _auditService.LogActionAsync(user.Email, "Login", "Authentication", user.Id.ToString(), $"User {user.Email} logged in");
+
+
             // Generate JWT Token
-            var token = GenerateJwtToken(user);
+            var token = await GenerateJwtToken(user);
             return Ok(new { token });
         }
 
-        private string GenerateJwtToken(ApplicationUser user)
+        private async Task<string> GenerateJwtToken(ApplicationUser user)
         {
-            var username = user.UserName ?? "defaultUsername";  // Provide default if null
-            var email = user.Email ?? "default@example.com";    // Provide default if null
+            var username = user.UserName ?? "defaultUsername";
+            var email = user.Email ?? "default@example.com";
 
-            // Define claims for JWT
-            var claims = new[] 
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, username),
-                new Claim(JwtRegisteredClaimNames.Email, email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())  // Unique identifier
-            };
+            // Fetch user roles
+            var roles = await _userManager.GetRolesAsync(user);
+
+            // Build claims
+            var claims = new List<Claim>
+{
+    new Claim(JwtRegisteredClaimNames.Sub, username),
+    new Claim(JwtRegisteredClaimNames.Email, email),
+    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+    new Claim("fullName", user.FullName ?? ""),
+    new Claim("phone", user.Phone ?? ""),
+    new Claim("address", user.Address ?? "")
+};
+
+            // Add role claims
+            claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
             var secretKey = _configuration["Jwt:SecretKey"];
-            if (string.IsNullOrEmpty(secretKey))
-            {
-                // Handle missing secret key more gracefully
-                return "JWT Secret Key is not configured.";
-            }
-
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            // Generate JWT token with expiration time of 1 day
             var token = new JwtSecurityToken(
-                _configuration["Jwt:Issuer"],
-                _configuration["Jwt:Audience"],
-                claims,
-                expires: DateTime.Now.AddDays(1),
+                issuer: _configuration["Jwt:Issuer"],
+                audience: _configuration["Jwt:Audience"],
+                claims: claims,
+                expires: DateTime.UtcNow.AddDays(1),
                 signingCredentials: creds
             );
 
-            // Return the token
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        // POST api/login/logout
+
+        [Authorize]
         [HttpPost("logout")]
         public IActionResult Logout()
         {
@@ -105,5 +117,63 @@ namespace CollegeTrackAPI.Controllers
             // This action could serve to notify the client to clear the token
             return Ok(new { message = "Successfully logged out. Please remove the token from storage." });
         }
+
+
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordModel model)
+        {
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+                return BadRequest("User not found");
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var resetLink = $"http://localhost:5050/reset-password?email={model.Email}&token={Uri.EscapeDataString(token)}";
+
+            await _emailSender.SendEmailAsync(
+                model.Email,
+                "Reset Your Password",
+                $"Click <a href='{resetLink}'>here</a> to reset your password."
+            );
+
+            await _auditService.LogActionAsync(User, "ForgotPassword", "User", user.Id.ToString(), $"Password reset request for email: {model.Email}");
+
+            return Ok("Password reset link sent.");
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordModel model)
+        {
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+                return BadRequest("User not found");
+
+            var result = await _userManager.ResetPasswordAsync(user, model.Token, model.NewPassword);
+            if (!result.Succeeded)
+                return BadRequest(result.Errors);
+            else
+            {
+                await SendPasswordResetConfirmationAsync(model.Email);
+                await _auditService.LogActionAsync(User, "ResetPassword", "User", user.Id.ToString(), $"Password reset for email: {model.Email}");
+
+                return Ok("Password reset successful");
+            }
+        }
+
+        private async Task SendPasswordResetConfirmationAsync(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            var firstName = user?.FullName?.Split(' ')?.FirstOrDefault() ?? "User";
+
+            var subject = "Your Password Has Been Changed";
+            var body = $@"
+        Dear {firstName},<br><br>
+        This is a confirmation that your password has been successfully changed.<br><br>
+        If you did not perform this action, please contact support immediately.<br><br>
+        Best Regards,<br>
+        College Track Team";
+
+            await _emailSender.SendEmailAsync(email, subject, body);
+        }
+
     }
 }

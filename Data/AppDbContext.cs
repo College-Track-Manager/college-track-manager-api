@@ -13,6 +13,8 @@ namespace CollegeTrackAPI.Data
         public DbSet<Track> Tracks { get; set; }
         public DbSet<Course> Courses { get; set; }
         public DbSet<StudentRegistration> Registrations { get; set; }
+        
+        public DbSet<AuditLog> AuditLogs { get; set; }
 
 
         // Optional: You can add more custom DbSets here if needed

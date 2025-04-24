@@ -20,6 +20,8 @@
     
     <!-- Identity Model for JWT -->
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.11.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.11.0" />
     
     <!-- Swagger -->
@@ -28,6 +30,7 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
+    <Folder Include="SecureFiles\" />
   </ItemGroup>
 
 </Project>

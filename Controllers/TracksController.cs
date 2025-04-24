@@ -3,19 +3,22 @@ using Microsoft.EntityFrameworkCore;
 using CollegeTrackAPI.Models;
 using CollegeTrackAPI.Data;
 using CollegeTrackAPI.DTOs;
+using Microsoft.AspNetCore.Authorization;
+using CollegeTrackAPI.Services;
 
 [ApiController]
 [Route("api/[controller]")]
 public class TracksController : ControllerBase
 {
     private readonly AppDbContext _context;
+    private readonly AuditService _auditService;
 
-    public TracksController(AppDbContext context)
+    public TracksController(AppDbContext context, AuditService auditService)
     {
         _context = context;
+        _auditService = auditService;
     }
 
-    [HttpGet]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<object>>> GetTracks([FromQuery] TrackTypeEnum? trackType)
     {
@@ -55,7 +58,7 @@ public class TracksController : ControllerBase
         return Ok(result);
     }
 
-
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<IActionResult> CreateTrack([FromBody] TrackCreateDto dto)
     {
@@ -108,6 +111,28 @@ public class TracksController : ControllerBase
         });
     }
 
+    [Authorize(Roles = "Admin")]
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteTrack(int id)
+    {
+        var track = await _context.Tracks
+            .Include(t => t.TrackCourses)
+            .Include(t => t.Registrations)
+            .FirstOrDefaultAsync(t => t.Id == id);
+
+        if (track == null)
+            return NotFound(new { message = "Track not found" });
+
+        if (track.Registrations.Any())
+            return BadRequest(new { message = "Cannot delete this track because students have registered for it." });
+
+        _context.Tracks.Remove(track);
+        await _context.SaveChangesAsync();
+
+        await _auditService.LogActionAsync(User, "Delete", "Tracks", id.ToString(), $"Deleted track {track.Title}");
+
+        return Ok(new { message = "Track deleted successfully" });
+    }
 
 
     [HttpGet("{id}")]
