@@ -94,7 +94,7 @@ public class StudentRegistrationsController : ControllerBase
         return Ok(new { message = "Registration successful" });
     }
 
-    [Authorize(Roles = "Student,Admin")]
+    
     [HttpGet("{email}")]
     [Authorize(Roles = "Student,Admin")]
     [HttpGet("profile")]
