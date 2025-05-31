@@ -99,7 +99,7 @@ public class StudentRegistrationsController : ControllerBase
     }
 
 
-    [HttpGet("{email}")]
+    
     [Authorize(Roles = "Student,Admin")]
     [HttpGet("profile")]
     public async Task<IActionResult> GetProfile()
