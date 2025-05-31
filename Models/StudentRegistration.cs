@@ -39,5 +39,6 @@ public class StudentRegistration
     public string? IdCardPath { get; set; } = "";
 
     public DateTime RegistrationDate { get; set; } = DateTime.UtcNow;
+    public int Status { get; set; } = 0; // 0 = Pening , 1 = Approved , 3 = Rejected
 
 }

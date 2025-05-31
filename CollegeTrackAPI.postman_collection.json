@@ -16,7 +16,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"firstName\": \"Yaser\",\r\n  \"lastName\": \"Ali\",\r\n  \"email\": \"yaser@mail.com\",\r\n  \"phone\": \"01065097976\",\r\n  \"nationalId\": \"12345678901234\",\r\n  \"address\": \"122 Cairo\",\r\n  \"password\": \"Aa123456\",\r\n  \"confirmPassword\": \"Aa123456\"\r\n}",
+					"raw": "{\r\n  \"firstName\": \"Yaser\",\r\n  \"lastName\": \"Ali\",\r\n  \"email\": \"yaser.ali154@gmail.com\",\r\n  \"phone\": \"01065097976\",\r\n  \"nationalId\": \"12345678901234\",\r\n  \"address\": \"122 Cairo\",\r\n  \"password\": \"Aa123456\",\r\n  \"confirmPassword\": \"Aa123456\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -43,7 +43,14 @@
 			"name": "StudentRegistrations",
 			"request": {
 				"auth": {
-					"type": "noauth"
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ5YXNlci5hbGkxNTRAZ21haWwuY29tIiwiZW1haWwiOiJ5YXNlci5hbGkxNTRAZ21haWwuY29tIiwianRpIjoiZDJlZDljMTctMDc2Ny00ODg5LWFmYWYtZWFkMjI3MGZmMjhlIiwiZnVsbE5hbWUiOiJZYXNlciBBbGkiLCJwaG9uZSI6IjAxMDY1MDk3OTc2IiwiYWRkcmVzcyI6IjEyMiBDYWlybyIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6WyJTdHVkZW50IiwiQWRtaW4iXSwiZXhwIjoxNzQ4NzgzMDU3LCJpc3MiOiJkZXYtaXNzdWVyIiwiYXVkIjoiZGV2LWF1ZGllbmNlIn0.hdd7h6t63gJkD9ZM9m2n1P6jq0diU1xCzZRVyJYn2W0",
+							"type": "string"
+						}
+					]
 				},
 				"method": "POST",
 				"header": [],
@@ -51,28 +58,8 @@
 					"mode": "formdata",
 					"formdata": [
 						{
-							"key": "firstName",
-							"value": " أحمد",
-							"type": "text"
-						},
-						{
-							"key": "lastName",
-							"value": " محمد",
-							"type": "text"
-						},
-						{
 							"key": "email",
-							"value": "ahmed@example.com",
-							"type": "text"
-						},
-						{
-							"key": "phone",
-							"value": " 0501234567",
-							"type": "text"
-						},
-						{
-							"key": "address",
-							"value": " الرياض، شارع الملك فهد",
+							"value": "mai@ma.ilcom",
 							"type": "text"
 						},
 						{
@@ -111,24 +98,24 @@
 							"type": "text"
 						},
 						{
-							"key": "resume",
-							"type": "file",
-							"src": "/C:/Users/yelbidwehy/OneDrive - Elm/MyFiles/MasterCairo/PHOTO-2024-12-14-16-06-47.jpg"
+							"key": "AcademicYear",
+							"value": "2025-2026",
+							"type": "text"
 						},
 						{
 							"key": "transcript",
 							"type": "file",
-							"src": "/C:/Users/yelbidwehy/OneDrive - Elm/MyFiles/MasterCairo/PHOTO-2024-12-14-16-06-47.jpg"
+							"src": "/C:/Users/yelbidwehy/Documents/GitHub/college-track-manager-api/wwwroot/uploads/1.jpg"
 						},
 						{
 							"key": "idCard",
 							"type": "file",
-							"src": "/C:/Users/yelbidwehy/OneDrive - Elm/MyFiles/MasterCairo/PHOTO-2024-12-14-16-06-47.jpg"
+							"src": "/C:/Users/yelbidwehy/Documents/GitHub/college-track-manager-api/wwwroot/uploads/1.jpg"
 						},
 						{
-							"key": "AcademicYear",
-							"value": "2024-2025",
-							"type": "text"
+							"key": "resume",
+							"type": "file",
+							"src": "/C:/Users/yelbidwehy/Documents/GitHub/college-track-manager-api/wwwroot/uploads/1.jpg"
 						}
 					]
 				},
@@ -154,7 +141,14 @@
 			},
 			"request": {
 				"auth": {
-					"type": "noauth"
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ5YXNlci5hbGkxNTRAZ21haWwuY29tIiwiZW1haWwiOiJ5YXNlci5hbGkxNTRAZ21haWwuY29tIiwianRpIjoiZDJlZDljMTctMDc2Ny00ODg5LWFmYWYtZWFkMjI3MGZmMjhlIiwiZnVsbE5hbWUiOiJZYXNlciBBbGkiLCJwaG9uZSI6IjAxMDY1MDk3OTc2IiwiYWRkcmVzcyI6IjEyMiBDYWlybyIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6WyJTdHVkZW50IiwiQWRtaW4iXSwiZXhwIjoxNzQ4NzgzMDU3LCJpc3MiOiJkZXYtaXNzdWVyIiwiYXVkIjoiZGV2LWF1ZGllbmNlIn0.hdd7h6t63gJkD9ZM9m2n1P6jq0diU1xCzZRVyJYn2W0",
+							"type": "string"
+						}
+					]
 				},
 				"method": "GET",
 				"header": [],
@@ -162,79 +156,69 @@
 					"mode": "formdata",
 					"formdata": [
 						{
-							"key": "firstName",
-							"value": " أحمد",
-							"type": "text"
-						},
-						{
-							"key": "lastName",
-							"value": " محمد",
-							"type": "text"
-						},
-						{
 							"key": "email",
-							"value": " ahmed@example.com",
-							"type": "text"
-						},
-						{
-							"key": "phone",
-							"value": " 0501234567",
-							"type": "text"
-						},
-						{
-							"key": "address",
-							"value": " الرياض، شارع الملك فهد",
-							"type": "text"
+							"value": " yaser.ali154@gmail.com",
+							"type": "text",
+							"disabled": true
 						},
 						{
 							"key": "trackType",
 							"value": "Professional",
-							"type": "text"
+							"type": "text",
+							"disabled": true
 						},
 						{
 							"key": "trackDegree",
 							"value": "Master",
-							"type": "text"
+							"type": "text",
+							"disabled": true
 						},
 						{
 							"key": "StudyType",
 							"value": "Online",
-							"type": "text"
+							"type": "text",
+							"disabled": true
 						},
 						{
 							"key": "track",
 							"value": " software-engineering",
-							"type": "text"
+							"type": "text",
+							"disabled": true
 						},
 						{
 							"key": "education",
 							"value": " بكالوريوس في علوم الحاسوب",
-							"type": "text"
+							"type": "text",
+							"disabled": true
 						},
 						{
 							"key": "statement",
 							"value": " أطمح لتطوير مهاراتي في هندسة البرمجيات",
-							"type": "text"
+							"type": "text",
+							"disabled": true
 						},
 						{
 							"key": "resume",
 							"type": "file",
-							"src": "/C:/Users/yelbidwehy/OneDrive - Elm/MyFiles/MasterCairo/PHOTO-2024-12-14-16-06-47.jpg"
+							"src": "/C:/Users/yelbidwehy/OneDrive - Elm/MyFiles/MasterCairo/PHOTO-2024-12-14-16-06-47.jpg",
+							"disabled": true
 						},
 						{
 							"key": "transcript",
 							"type": "file",
-							"src": "/C:/Users/yelbidwehy/OneDrive - Elm/MyFiles/MasterCairo/PHOTO-2024-12-14-16-06-47.jpg"
+							"src": "/C:/Users/yelbidwehy/OneDrive - Elm/MyFiles/MasterCairo/PHOTO-2024-12-14-16-06-47.jpg",
+							"disabled": true
 						},
 						{
 							"key": "idCard",
 							"type": "file",
-							"src": "/C:/Users/yelbidwehy/OneDrive - Elm/MyFiles/MasterCairo/PHOTO-2024-12-14-16-06-47.jpg"
+							"src": "/C:/Users/yelbidwehy/OneDrive - Elm/MyFiles/MasterCairo/PHOTO-2024-12-14-16-06-47.jpg",
+							"disabled": true
 						}
 					]
 				},
 				"url": {
-					"raw": "http://localhost:5050/api/StudentRegistrations/ahmed@example.com",
+					"raw": "http://localhost:5050/api/StudentRegistrations/profile",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -243,7 +227,7 @@
 					"path": [
 						"api",
 						"StudentRegistrations",
-						"ahmed@example.com"
+						"profile"
 					]
 				}
 			},
@@ -259,7 +243,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"Username\": \"yaser@mail.com\",\r\n  \"Password\": \"Aa123456\"\r\n}",
+					"raw": "{\r\n  \"Username\": \"yaser.ali154@gmail.com\",\r\n  \"Password\": \"Aa123456\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -289,7 +273,14 @@
 			},
 			"request": {
 				"auth": {
-					"type": "noauth"
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ5YXNlcjJAbWFpbC5jb20iLCJlbWFpbCI6Inlhc2VyMkBtYWlsLmNvbSIsImp0aSI6ImZlZWVhYTQ4LTA0ZTEtNGZkMC1iMzA3LTAzMjk5MjNiMjFiYyIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlN0dWRlbnQiLCJleHAiOjE3NDU1NzcyOTMsImlzcyI6ImRldi1pc3N1ZXIiLCJhdWQiOiJkZXYtYXVkaWVuY2UifQ.PfZ4ZBieESgIYrIJWLFG1lZ6B5pBoxoLrhtS7Rj2qMY",
+							"type": "string"
+						}
+					]
 				},
 				"method": "GET",
 				"header": [],
@@ -321,7 +312,14 @@
 			"name": "CreateTrack",
 			"request": {
 				"auth": {
-					"type": "noauth"
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ5YXNlckBtYWlsLmNvbSIsImVtYWlsIjoieWFzZXJAbWFpbC5jb20iLCJqdGkiOiJhYzc0N2VmMi1iNmIwLTQ4OWUtOTc4ZC1lODU5NTcwMzk0OWMiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOlsiU3R1ZGVudCIsIkFkbWluIl0sImV4cCI6MTc0NTU3NzA1NiwiaXNzIjoiZGV2LWlzc3VlciIsImF1ZCI6ImRldi1hdWRpZW5jZSJ9.sWyDrpe3FbD4LyPUdtZdGTyGfVBjhKLWStQyDPmOqBs",
+							"type": "string"
+						}
+					]
 				},
 				"method": "POST",
 				"header": [],
@@ -353,13 +351,20 @@
 			"name": "CreateCourse",
 			"request": {
 				"auth": {
-					"type": "noauth"
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ5YXNlci5hbGkxNTRAZ21haWwuY29tIiwiZW1haWwiOiJ5YXNlci5hbGkxNTRAZ21haWwuY29tIiwianRpIjoiYmU2MzZjY2MtN2I4MC00N2NjLWI3ZjQtMTFkMGM1Yjk0MmQyIiwiZnVsbE5hbWUiOiJZYXNlciBBbGkiLCJwaG9uZSI6IjAxMDY1MDk3OTc2IiwiYWRkcmVzcyI6IjEyMiBDYWlybyIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6WyJTdHVkZW50IiwiQWRtaW4iXSwiZXhwIjoxNzQ1NTg2MTM2LCJpc3MiOiJkZXYtaXNzdWVyIiwiYXVkIjoiZGV2LWF1ZGllbmNlIn0.5EZDqnGucla_ISAlWFKNF95zvrVaoUZ2uN6via_6Jk0",
+							"type": "string"
+						}
+					]
 				},
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"title\": \"إدارة البيانات\",\r\n  \"titleEn\": \"Data Management\",\r\n  \"trackType\": 2,\r\n  \"trackDegree\": 1,\r\n  \"shortDescription\": \"مسار لإدارة وتحليل البيانات\",\r\n  \"fullDescription\": \"يشمل تقنيات تحليل البيانات، ومستودعات البيانات، وSQL.\",\r\n  \"duration\": \"٣ سنوات\",\r\n  \"careerOutlook\": \"وظائف تحليل البيانات، ذكاء الأعمال، إدارة البيانات.\",\r\n  \"image\": \"https://example.com/data.jpg\",\r\n  \"requirements\": [\r\n        \"شهادة الثانوية العامة أو ما يعادلها\",\r\n        \"معدل تراكمي لا يقل عن ٢.٦\",\r\n        \"مهارات تحليلية جيدة\",\r\n        \"اهتمام بالرأي العام والبحوث الاجتماعية\"\r\n    ],\r\n  \"courseIds\": [1, 2, 3]  // <-- Must be valid Course Ids\r\n}",
+					"raw": "{\r\n  \"courseCode\": \"DS102\",\r\n  \"title\": \"Data Structures\",\r\n  \"description\": \"Covers arrays, linked lists, trees, and graphs.\",\r\n  \"credits\": 4\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -367,7 +372,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:5050/api/tracks",
+					"raw": "http://localhost:5050/api/courses",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -375,7 +380,7 @@
 					"port": "5050",
 					"path": [
 						"api",
-						"tracks"
+						"courses"
 					]
 				}
 			},
@@ -383,15 +388,18 @@
 		},
 		{
 			"name": "GetCourses",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
 			"request": {
 				"auth": {
 					"type": "noauth"
 				},
-				"method": "POST",
+				"method": "GET",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"title\": \"إدارة البيانات\",\r\n  \"titleEn\": \"Data Management\",\r\n  \"trackType\": 2,\r\n  \"trackDegree\": 1,\r\n  \"shortDescription\": \"مسار لإدارة وتحليل البيانات\",\r\n  \"fullDescription\": \"يشمل تقنيات تحليل البيانات، ومستودعات البيانات، وSQL.\",\r\n  \"duration\": \"٣ سنوات\",\r\n  \"careerOutlook\": \"وظائف تحليل البيانات، ذكاء الأعمال، إدارة البيانات.\",\r\n  \"image\": \"https://example.com/data.jpg\",\r\n  \"requirements\": [\r\n        \"شهادة الثانوية العامة أو ما يعادلها\",\r\n        \"معدل تراكمي لا يقل عن ٢.٦\",\r\n        \"مهارات تحليلية جيدة\",\r\n        \"اهتمام بالرأي العام والبحوث الاجتماعية\"\r\n    ],\r\n  \"courseIds\": [1, 2, 3]  // <-- Must be valid Course Ids\r\n}",
+					"raw": "",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -399,7 +407,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:5050/api/tracks",
+					"raw": "http://localhost:5050/api/courses?courseCode=pm330",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -407,7 +415,13 @@
 					"port": "5050",
 					"path": [
 						"api",
-						"tracks"
+						"courses"
+					],
+					"query": [
+						{
+							"key": "courseCode",
+							"value": "pm330"
+						}
 					]
 				}
 			},
@@ -416,24 +430,95 @@
 		{
 			"name": "getfile",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ5YXNlci5hbGkxNTRAZ21haWwuY29tIiwiZW1haWwiOiJ5YXNlci5hbGkxNTRAZ21haWwuY29tIiwianRpIjoiOTM0Y2NiOWYtNjVlNy00YTBhLWFiYTItM2U3YjMyN2MwM2Y4IiwiZnVsbE5hbWUiOiJZYXNlciBBbGkiLCJwaG9uZSI6IjAxMDY1MDk3OTc2IiwiYWRkcmVzcyI6IjEyMiBDYWlybyIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6WyJTdHVkZW50IiwiQWRtaW4iXSwiZXhwIjoxNzQ4MjgxNjg1LCJpc3MiOiJkZXYtaXNzdWVyIiwiYXVkIjoiZGV2LWF1ZGllbmNlIn0.FiJJD2KjHE-kX8UXEyaN_xsq7HzEXwXcwHjwtVaEQxY",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5050/api/SecureFiles/download/4ece809b-5947-4a7a-ac2c-5a06770c7af8_1.jpg",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5050",
+					"path": [
+						"api",
+						"SecureFiles",
+						"download",
+						"4ece809b-5947-4a7a-ac2c-5a06770c7af8_1.jpg"
+					]
+				}
 			},
 			"response": []
 		},
 		{
 			"name": "forget-password",
 			"request": {
-				"method": "GET",
-				"header": []
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"yaser.ali154@gmail.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5050/api/login/forgot-password",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5050",
+					"path": [
+						"api",
+						"login",
+						"forgot-password"
+					]
+				}
 			},
 			"response": []
 		},
 		{
 			"name": "reset-password",
 			"request": {
-				"method": "GET",
-				"header": []
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"yaser.ali154@gmail.com\",\r\n  \"token\": \"CfDJ8L11/q1cNCxDr76eDXTmU95eKARhQl2/Kvl49IGXCga6nePGFveRpbbB+bW7zm5jCpuYW5vxRXojB9m9XE3I33fHRq29XUDHoj/OOk3psq7iPizzWDKe/jgcRIlWytC+eE9tfYNTK0qCYMqG37yfXgRbVqristfROYvB/F4cscloPHMhdsTkdiZCxvU5CUpSQ1jFTgCnWN+x5n3o9N+sZpnRuwlo8Rar1wuUp7N42EGl\",\r\n  \"newPassword\": \"Aa123456\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5050/api/login/reset-password",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5050",
+					"path": [
+						"api",
+						"login",
+						"reset-password"
+					]
+				}
 			},
 			"response": []
 		}

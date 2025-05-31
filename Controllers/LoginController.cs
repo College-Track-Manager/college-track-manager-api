@@ -85,7 +85,9 @@ namespace CollegeTrackAPI.Controllers
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                     new Claim("fullName", user.FullName ?? string.Empty),
                     new Claim("phone", user.Phone ?? string.Empty),
-                    new Claim("address", user.Address ?? string.Empty)
+                    new Claim("address", user.Address ?? string.Empty),
+                    new Claim("nationalId", user.NationalId ?? string.Empty)
+                    
                 };
 
             claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
