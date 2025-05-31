@@ -1,0 +1,441 @@
+{
+	"info": {
+		"_postman_id": "c0bf98d6-fca6-40a1-8902-a68d0260ee67",
+		"name": "CollegeTrackAPI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6232739"
+	},
+	"item": [
+		{
+			"name": "userregistration/register",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"firstName\": \"Yaser\",\r\n  \"lastName\": \"Ali\",\r\n  \"email\": \"yaser@mail.com\",\r\n  \"phone\": \"01065097976\",\r\n  \"nationalId\": \"12345678901234\",\r\n  \"address\": \"122 Cairo\",\r\n  \"password\": \"Aa123456\",\r\n  \"confirmPassword\": \"Aa123456\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5050/api/userregistration/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5050",
+					"path": [
+						"api",
+						"userregistration",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "StudentRegistrations",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "firstName",
+							"value": " أحمد",
+							"type": "text"
+						},
+						{
+							"key": "lastName",
+							"value": " محمد",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "ahmed@example.com",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": " 0501234567",
+							"type": "text"
+						},
+						{
+							"key": "address",
+							"value": " الرياض، شارع الملك فهد",
+							"type": "text"
+						},
+						{
+							"key": "trackType",
+							"value": "Professional",
+							"type": "text"
+						},
+						{
+							"key": "trackDegree",
+							"value": "Master",
+							"type": "text"
+						},
+						{
+							"key": "StudyType",
+							"value": "Online",
+							"type": "text"
+						},
+						{
+							"key": "trackid",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "track",
+							"value": " software-engineering",
+							"type": "text"
+						},
+						{
+							"key": "education",
+							"value": " بكالوريوس في علوم الحاسوب",
+							"type": "text"
+						},
+						{
+							"key": "statement",
+							"value": " أطمح لتطوير مهاراتي في هندسة البرمجيات",
+							"type": "text"
+						},
+						{
+							"key": "resume",
+							"type": "file",
+							"src": "/C:/Users/yelbidwehy/OneDrive - Elm/MyFiles/MasterCairo/PHOTO-2024-12-14-16-06-47.jpg"
+						},
+						{
+							"key": "transcript",
+							"type": "file",
+							"src": "/C:/Users/yelbidwehy/OneDrive - Elm/MyFiles/MasterCairo/PHOTO-2024-12-14-16-06-47.jpg"
+						},
+						{
+							"key": "idCard",
+							"type": "file",
+							"src": "/C:/Users/yelbidwehy/OneDrive - Elm/MyFiles/MasterCairo/PHOTO-2024-12-14-16-06-47.jpg"
+						},
+						{
+							"key": "AcademicYear",
+							"value": "2024-2025",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:5050/api/StudentRegistrations",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5050",
+					"path": [
+						"api",
+						"StudentRegistrations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "StudentProfile",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "firstName",
+							"value": " أحمد",
+							"type": "text"
+						},
+						{
+							"key": "lastName",
+							"value": " محمد",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": " ahmed@example.com",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": " 0501234567",
+							"type": "text"
+						},
+						{
+							"key": "address",
+							"value": " الرياض، شارع الملك فهد",
+							"type": "text"
+						},
+						{
+							"key": "trackType",
+							"value": "Professional",
+							"type": "text"
+						},
+						{
+							"key": "trackDegree",
+							"value": "Master",
+							"type": "text"
+						},
+						{
+							"key": "StudyType",
+							"value": "Online",
+							"type": "text"
+						},
+						{
+							"key": "track",
+							"value": " software-engineering",
+							"type": "text"
+						},
+						{
+							"key": "education",
+							"value": " بكالوريوس في علوم الحاسوب",
+							"type": "text"
+						},
+						{
+							"key": "statement",
+							"value": " أطمح لتطوير مهاراتي في هندسة البرمجيات",
+							"type": "text"
+						},
+						{
+							"key": "resume",
+							"type": "file",
+							"src": "/C:/Users/yelbidwehy/OneDrive - Elm/MyFiles/MasterCairo/PHOTO-2024-12-14-16-06-47.jpg"
+						},
+						{
+							"key": "transcript",
+							"type": "file",
+							"src": "/C:/Users/yelbidwehy/OneDrive - Elm/MyFiles/MasterCairo/PHOTO-2024-12-14-16-06-47.jpg"
+						},
+						{
+							"key": "idCard",
+							"type": "file",
+							"src": "/C:/Users/yelbidwehy/OneDrive - Elm/MyFiles/MasterCairo/PHOTO-2024-12-14-16-06-47.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:5050/api/StudentRegistrations/ahmed@example.com",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5050",
+					"path": [
+						"api",
+						"StudentRegistrations",
+						"ahmed@example.com"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"Username\": \"yaser@mail.com\",\r\n  \"Password\": \"Aa123456\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5050/api/login/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5050",
+					"path": [
+						"api",
+						"login",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "tracks",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5050/api/tracks",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5050",
+					"path": [
+						"api",
+						"tracks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateTrack",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"إدارة البيانات\",\r\n  \"titleEn\": \"Data Management\",\r\n  \"trackType\": 2,\r\n  \"trackDegree\": 1,\r\n  \"shortDescription\": \"مسار لإدارة وتحليل البيانات\",\r\n  \"fullDescription\": \"يشمل تقنيات تحليل البيانات، ومستودعات البيانات، وSQL.\",\r\n  \"duration\": \"٣ سنوات\",\r\n  \"careerOutlook\": \"وظائف تحليل البيانات، ذكاء الأعمال، إدارة البيانات.\",\r\n  \"image\": \"https://example.com/data.jpg\",\r\n  \"requirements\": [\r\n        \"شهادة الثانوية العامة أو ما يعادلها\",\r\n        \"معدل تراكمي لا يقل عن ٢.٦\",\r\n        \"مهارات تحليلية جيدة\",\r\n        \"اهتمام بالرأي العام والبحوث الاجتماعية\"\r\n    ],\r\n  \"courseIds\": [1, 2, 3]  // <-- Must be valid Course Ids\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5050/api/tracks",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5050",
+					"path": [
+						"api",
+						"tracks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateCourse",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"إدارة البيانات\",\r\n  \"titleEn\": \"Data Management\",\r\n  \"trackType\": 2,\r\n  \"trackDegree\": 1,\r\n  \"shortDescription\": \"مسار لإدارة وتحليل البيانات\",\r\n  \"fullDescription\": \"يشمل تقنيات تحليل البيانات، ومستودعات البيانات، وSQL.\",\r\n  \"duration\": \"٣ سنوات\",\r\n  \"careerOutlook\": \"وظائف تحليل البيانات، ذكاء الأعمال، إدارة البيانات.\",\r\n  \"image\": \"https://example.com/data.jpg\",\r\n  \"requirements\": [\r\n        \"شهادة الثانوية العامة أو ما يعادلها\",\r\n        \"معدل تراكمي لا يقل عن ٢.٦\",\r\n        \"مهارات تحليلية جيدة\",\r\n        \"اهتمام بالرأي العام والبحوث الاجتماعية\"\r\n    ],\r\n  \"courseIds\": [1, 2, 3]  // <-- Must be valid Course Ids\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5050/api/tracks",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5050",
+					"path": [
+						"api",
+						"tracks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetCourses",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"إدارة البيانات\",\r\n  \"titleEn\": \"Data Management\",\r\n  \"trackType\": 2,\r\n  \"trackDegree\": 1,\r\n  \"shortDescription\": \"مسار لإدارة وتحليل البيانات\",\r\n  \"fullDescription\": \"يشمل تقنيات تحليل البيانات، ومستودعات البيانات، وSQL.\",\r\n  \"duration\": \"٣ سنوات\",\r\n  \"careerOutlook\": \"وظائف تحليل البيانات، ذكاء الأعمال، إدارة البيانات.\",\r\n  \"image\": \"https://example.com/data.jpg\",\r\n  \"requirements\": [\r\n        \"شهادة الثانوية العامة أو ما يعادلها\",\r\n        \"معدل تراكمي لا يقل عن ٢.٦\",\r\n        \"مهارات تحليلية جيدة\",\r\n        \"اهتمام بالرأي العام والبحوث الاجتماعية\"\r\n    ],\r\n  \"courseIds\": [1, 2, 3]  // <-- Must be valid Course Ids\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5050/api/tracks",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5050",
+					"path": [
+						"api",
+						"tracks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getfile",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "forget-password",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "reset-password",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}
