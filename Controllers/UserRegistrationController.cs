@@ -19,6 +19,9 @@ namespace CollegeTrackAPI.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             if (model.Password != model.ConfirmPassword)
                 return BadRequest(new { message = "Passwords do not match" });
 
@@ -26,9 +29,9 @@ namespace CollegeTrackAPI.Controllers
             {
                 UserName = model.Email,
                 Email = model.Email,
-                FullName = model.FirstName + " " + model.LastName,
-                NationalId = model.NationalId , 
-                Address = model.Address ,
+                FullName = $"{model.FirstName ?? ""} {model.LastName ?? ""}",
+                NationalId = model.NationalId,
+                Address = model.Address,
                 Phone = model.Phone
             };
 
@@ -36,13 +39,13 @@ namespace CollegeTrackAPI.Controllers
             if (!result.Succeeded)
                 return BadRequest(new { message = "User creation failed", errors = result.Errors });
 
-            // Assign "Student" role
             var roleResult = await _userManager.AddToRoleAsync(user, "Student");
             if (!roleResult.Succeeded)
                 return BadRequest(new { message = "User created but failed to assign Student role", errors = roleResult.Errors });
 
             return Ok(new { message = "Registration successful with Student role" });
         }
+
 
     }
 }

@@ -11,17 +11,17 @@ public class StudentRegistration
     
 
     [Required]
-    public string AcademicYear { get; set; } = "";
+    public string? AcademicYear { get; set; } = "";
 
     [Required]
     public TrackTypeEnum TrackType { get; set; } = TrackTypeEnum.Academic; // Default is Academic
 
     // Using the enum for TrackDegree
     [Required]
-    public TrackDegreeEnum TrackDegree { get; set; } = TrackDegreeEnum.Diploma; // Default is Diploma
+    public TrackDegreeEnum? TrackDegree { get; set; } = TrackDegreeEnum.Diploma; // Default is Diploma
 
     [Required]
-    public StudyType StudyType { get; set; }
+    public StudyType? StudyType { get; set; }
 
     [Required]
     public int TrackId { get; set; }
@@ -29,14 +29,14 @@ public class StudentRegistration
     public Track? Track { get; set; } // navigation property
 
     [Required]
-    public string Education { get; set; } = "";
+    public string? Education { get; set; } = "";
 
     [Required]
-    public string Statement { get; set; } = "";
+    public string? Statement { get; set; } = "";
 
-    public string ResumePath { get; set; } = "";
-    public string TranscriptPath { get; set; } = "";
-    public string IdCardPath { get; set; } = "";
+    public string? ResumePath { get; set; } = "";
+    public string? TranscriptPath { get; set; } = "";
+    public string? IdCardPath { get; set; } = "";
 
     public DateTime RegistrationDate { get; set; } = DateTime.UtcNow;
 

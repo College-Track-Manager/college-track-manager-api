@@ -20,8 +20,8 @@ public class StudentRegistrationsController : ControllerBase
 
 
 
-    public StudentRegistrationsController( CollegeTrackAPI.Services.IEmailSender emailSender , 
-        AuditService auditService , UserManager<ApplicationUser> userManager , AppDbContext context, IWebHostEnvironment env)
+    public StudentRegistrationsController(CollegeTrackAPI.Services.IEmailSender emailSender,
+        AuditService auditService, UserManager<ApplicationUser> userManager, AppDbContext context, IWebHostEnvironment env)
     {
         _userManager = userManager;
         _context = context;
@@ -68,10 +68,14 @@ public class StudentRegistrationsController : ControllerBase
             await file.CopyToAsync(stream);
             return fileName; // Save filename only, no full URL
         }
+        if (resume != null)
+            model.ResumePath = await SaveFileAsync(resume);
 
-        model.ResumePath = await SaveFileAsync(resume);
-        model.TranscriptPath = await SaveFileAsync(transcript);
-        model.IdCardPath = await SaveFileAsync(idCard);
+        if (transcript != null)
+            model.TranscriptPath = await SaveFileAsync(transcript);
+
+        if (idCard != null)
+            model.IdCardPath = await SaveFileAsync(idCard);
 
         // Look up the track based on TrackId
         var track = await _context.Tracks.FirstOrDefaultAsync(t => t.Id == model.TrackId);
@@ -87,14 +91,14 @@ public class StudentRegistrationsController : ControllerBase
         var fullName = user?.FullName ?? "User";
 
         // Send email to user after registration with the track name
-        await SendRegistrationEmailAsync(currentUserEmail, track.Title , fullName);
+        await SendRegistrationEmailAsync(currentUserEmail, track.Title, fullName);
 
         await _auditService.LogActionAsync(User, "Create", "StudentRegistrations", model.Id.ToString(), $"Student {model.Email} registered for track {track.Title}");
 
         return Ok(new { message = "Registration successful" });
     }
 
-    
+
     [HttpGet("{email}")]
     [Authorize(Roles = "Student,Admin")]
     [HttpGet("profile")]

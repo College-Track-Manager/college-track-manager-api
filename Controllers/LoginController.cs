@@ -63,7 +63,7 @@ namespace CollegeTrackAPI.Controllers
                 return Unauthorized(new { message = "Invalid password." });
             }
 
-            await _auditService.LogActionAsync(user.Email, "Login", "Authentication", user.Id.ToString(), $"User {user.Email} logged in");
+            await _auditService.LogActionAsync(user.Email!, "Login", "Authentication", user.Id.ToString(), $"User {user.Email!} logged in");
 
 
             // Generate JWT Token
@@ -76,30 +76,34 @@ namespace CollegeTrackAPI.Controllers
             var username = user.UserName ?? "defaultUsername";
             var email = user.Email ?? "default@example.com";
 
-            // Fetch user roles
             var roles = await _userManager.GetRolesAsync(user);
 
-            // Build claims
             var claims = new List<Claim>
-{
-    new Claim(JwtRegisteredClaimNames.Sub, username),
-    new Claim(JwtRegisteredClaimNames.Email, email),
-    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-    new Claim("fullName", user.FullName ?? ""),
-    new Claim("phone", user.Phone ?? ""),
-    new Claim("address", user.Address ?? "")
-};
+                {
+                    new Claim(JwtRegisteredClaimNames.Sub, username),
+                    new Claim(JwtRegisteredClaimNames.Email, email),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim("fullName", user.FullName ?? string.Empty),
+                    new Claim("phone", user.Phone ?? string.Empty),
+                    new Claim("address", user.Address ?? string.Empty)
+                };
 
-            // Add role claims
             claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
+            // Read config with validation
             var secretKey = _configuration["Jwt:SecretKey"];
+            var issuer = _configuration["Jwt:Issuer"];
+            var audience = _configuration["Jwt:Audience"];
+
+            if (string.IsNullOrWhiteSpace(secretKey) || string.IsNullOrWhiteSpace(issuer) || string.IsNullOrWhiteSpace(audience))
+                throw new InvalidOperationException("JWT configuration is missing.");
+
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
-                issuer: _configuration["Jwt:Issuer"],
-                audience: _configuration["Jwt:Audience"],
+                issuer: issuer,
+                audience: audience,
                 claims: claims,
                 expires: DateTime.UtcNow.AddDays(1),
                 signingCredentials: creds
@@ -107,6 +111,7 @@ namespace CollegeTrackAPI.Controllers
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
 
 
         [Authorize]
@@ -143,11 +148,16 @@ namespace CollegeTrackAPI.Controllers
         [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordModel model)
         {
+            if (string.IsNullOrWhiteSpace(model.Email))
+                return BadRequest("Email is required");
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
                 return BadRequest("User not found");
 
+            if (string.IsNullOrWhiteSpace(model.Token) || string.IsNullOrWhiteSpace(model.NewPassword))
+                return BadRequest("Token and new password are required.");
             var result = await _userManager.ResetPasswordAsync(user, model.Token, model.NewPassword);
+
             if (!result.Succeeded)
                 return BadRequest(result.Errors);
             else

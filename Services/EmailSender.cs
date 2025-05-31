@@ -19,33 +19,44 @@ namespace CollegeTrackAPI.Services
             var smtpServer = _config["Email:SmtpServer"];
             var smtpUser = _config["Email:SmtpUser"];
             var smtpPassword = _config["Email:SmtpPassword"];
-            var smtpPort = int.Parse(_config["Email:SmtpPort"] ?? "587");
+            var smtpPortRaw = _config["Email:SmtpPort"];
 
-            using (var client = new SmtpClient(smtpServer))
+            // Validate critical fields
+            if (string.IsNullOrWhiteSpace(smtpServer) ||
+                string.IsNullOrWhiteSpace(smtpUser) ||
+                string.IsNullOrWhiteSpace(smtpPassword) ||
+                !int.TryParse(smtpPortRaw, out int smtpPort))
             {
-                client.Port = smtpPort;
-                client.Credentials = new NetworkCredential(smtpUser, smtpPassword);
-                client.EnableSsl = true;
+                throw new InvalidOperationException("Invalid SMTP configuration.");
+            }
 
-                var mailMessage = new MailMessage
-                {
-                    From = new MailAddress(smtpUser),
-                    Subject = subject,
-                    Body = message,
-                    IsBodyHtml = true,
-                };
+            using var client = new SmtpClient(smtpServer)
+            {
+                Port = smtpPort,
+                Credentials = new NetworkCredential(smtpUser, smtpPassword),
+                EnableSsl = true
+            };
 
-                mailMessage.To.Add(email);
-                try
-                {
-                    await client.SendMailAsync(mailMessage);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("EMAIL ERROR: " + ex.Message);
-                    throw;  // or return BadRequest(ex.Message) in your controller
-                }
+            var mailMessage = new MailMessage
+            {
+                From = new MailAddress(smtpUser),
+                Subject = subject,
+                Body = message,
+                IsBodyHtml = true
+            };
+
+            mailMessage.To.Add(email);
+
+            try
+            {
+                await client.SendMailAsync(mailMessage);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("EMAIL ERROR: " + ex.Message);
+                throw;  // Let the controller decide how to handle
             }
         }
+
     }
 }
