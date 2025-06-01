@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CollegeTrackAPI.Models;
 using CollegeTrackAPI.Data;
@@ -18,8 +18,6 @@ public class StudentRegistrationsController : ControllerBase
     private readonly AuditService _auditService;
     private readonly CollegeTrackAPI.Services.IEmailSender _emailSender;
 
-
-
     public StudentRegistrationsController(CollegeTrackAPI.Services.IEmailSender emailSender,
         AuditService auditService, UserManager<ApplicationUser> userManager, AppDbContext context, IWebHostEnvironment env)
     {
@@ -28,7 +26,6 @@ public class StudentRegistrationsController : ControllerBase
         _env = env;
         _auditService = auditService;
         _emailSender = emailSender;
-
 
     }
 
@@ -97,8 +94,6 @@ public class StudentRegistrationsController : ControllerBase
 
         return Ok(new { message = "Registration successful" });
     }
-
-
     
     [Authorize(Roles = "Student,Admin")]
     [HttpGet("profile")]
@@ -169,6 +164,86 @@ public class StudentRegistrationsController : ControllerBase
 
         await _emailSender.SendEmailAsync(email, subject, body);
     }
+    [HttpGet("GetStudentRegistratrion")]
+    public async Task<ActionResult<IEnumerable<object>>> GetStudentRegistratrion([FromQuery] StudentRegistrationType? studentRegistrationType)
+    {
+        var query = _context.Registrations
+            //.Include(t => t.Registrations)
+                /*ThenInclude(tc => tc.Course)*/
+            .AsQueryable();
 
+        if (studentRegistrationType.HasValue)
+        {
+            query = query.Where(t => t.Status ==(int)studentRegistrationType.Value);
+        }
 
+        var result = await query.ToListAsync();
+
+        return Ok(result);
+    }
+
+    [HttpGet("GetMyRegistrations")]
+    public async Task<ActionResult<IEnumerable<object>>> GetMyRegistrations([FromQuery] int nationalId)
+    {
+        try
+        {
+            var query = _context.Registrations
+            .AsQueryable();
+
+            if (nationalId <= 0)
+            {
+                return Ok("الرجاء ادخل رقم صحيح");
+            }
+
+            query = query.Where(t => t.Id == nationalId);
+
+            var result = await query.ToListAsync();
+
+            if (result?.Count > 0)
+                return Ok(result);
+            else
+                return Ok(" لا توجد بيانات للرقم القومي المدخل");
+        }
+        catch (Exception)
+        {
+            return BadRequest();
+        }
+    }
+
+    //[Authorize(Roles = "Admin")]
+    [HttpPut("UpdateStudentRegistration")]
+    public async Task<ActionResult<StudentRegistration>> UpdateStudentRegistration(int id,int status,string comments)
+    {
+        if (id <= 0)
+        {
+            return Ok("الرجاء ادخل رقم صحيح");
+        }
+      
+        var registration = await _context.Registrations.FindAsync(id);
+
+        if (registration == null)
+        {
+            return NotFound(new { message = "لم يتم العثور على التسجيل المطلوب" });
+        }
+
+        // Update only Status and Comments
+        registration.Status = status;
+        registration.AdminComments = comments;
+
+        // Mark as modified (optional - EF usually detects changes automatically)
+        _context.Entry(registration).Property(x => x.Status).IsModified = true;
+        _context.Entry(registration).Property(x => x.AdminComments).IsModified = true;
+
+        await _context.SaveChangesAsync();
+
+        await _auditService.LogActionAsync(
+            User,
+            "UpdateStatus",
+            "Registrations",
+            id.ToString(),
+            $"Updated status to {registration.Status} and comments to {registration.AdminComments} for student registration {id}"
+        );
+
+        return Ok(new { message = "تم تحديث حالة التسجيل بنجاح" });
+    }
 }

@@ -7,9 +7,7 @@ public class StudentRegistration
 
     [Required, EmailAddress]
     public string Email { get; set; } = "";
-
     
-
     [Required]
     public string? AcademicYear { get; set; } = "";
 
@@ -40,5 +38,5 @@ public class StudentRegistration
 
     public DateTime RegistrationDate { get; set; } = DateTime.UtcNow;
     public int Status { get; set; } = 0; // 0 = Pening , 1 = Approved , 3 = Rejected
-
+    public string? AdminComments { get; set; }
 }
