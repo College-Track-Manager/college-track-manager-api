@@ -183,19 +183,23 @@ public class StudentRegistrationsController : ControllerBase
     }
 
     [HttpGet("GetMyRegistrations")]
-    public async Task<ActionResult<IEnumerable<object>>> GetMyRegistrations([FromQuery] int nationalId)
+    public async Task<ActionResult<IEnumerable<object>>> GetMyRegistrations([FromQuery] string nationalId)
     {
         try
         {
             var query = _context.Registrations
             .AsQueryable();
-
-            if (nationalId <= 0)
+         
+            if (String.IsNullOrEmpty(nationalId))
             {
                 return Ok("الرجاء ادخل رقم صحيح");
             }
 
-            query = query.Where(t => t.Id == nationalId);
+            var users = _context.Users.Where( u => u.NationalId == nationalId.ToString()).FirstOrDefaultAsync();
+
+            var email = users.Result?.Email;
+
+            query = query.Where(t => t.Email == email);
 
             var result = await query.ToListAsync();
 
