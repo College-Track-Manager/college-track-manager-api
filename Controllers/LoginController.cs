@@ -134,7 +134,7 @@ namespace CollegeTrackAPI.Controllers
                 return BadRequest("User not found");
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var resetLink = $"http://localhost:5050/reset-password?email={model.Email}&token={Uri.EscapeDataString(token)}";
+            var resetLink = $"http://localhost:8080/reset-password?email={model.Email}&token={Uri.EscapeDataString(token)}";
 
             await _emailSender.SendEmailAsync(
                 model.Email,
