@@ -155,19 +155,7 @@ public class StudentRegistrationsController : ControllerBase
         });
     }
 
-    // Send Registration Email after successful registration
-    private async Task SendRegistrationEmailAsync(string email, string trackName, string fullName)
-    {
-        var subject = "Track Registration Successful";
-        var body = $@"
-        Dear {fullName},<br><br>
-        You have successfully registered for the track <b>{trackName}</b>.<br>
-        We are excited to have you on board!<br><br>
-        Best Regards,<br>
-        College Track Team";
-
-        await _emailSender.SendEmailAsync(email, subject, body);
-    }
+   
     [HttpGet("GetStudentRegistratrion")]
     public async Task<ActionResult<IEnumerable<object>>> GetStudentRegistratrion([FromQuery] StudentRegistrationType? studentRegistrationType)
     {
@@ -248,6 +236,47 @@ public class StudentRegistrationsController : ControllerBase
             $"Updated status to {registration.Status} and comments to {registration.AdminComments} for student registration {id}"
         );
 
+        // Send email to student based on new status
+        var user = await _userManager.FindByEmailAsync(registration.Email);
+        var fullName = user?.FullName ?? "Student";
+
+        if (status == 1)
+        {
+            await SendStatusUpdateEmailAsync(registration.Email, fullName, "approved", registration.AdminComments);
+        }
+        else if (status == 3)
+        {
+            await SendStatusUpdateEmailAsync(registration.Email, fullName, "rejected", registration.AdminComments);
+        }
+
         return Ok(new { message = "تم تحديث حالة التسجيل بنجاح" });
+    }
+
+    // Send Registration Email after successful registration
+    private async Task SendRegistrationEmailAsync(string email, string trackName, string fullName)
+    {
+        var subject = "Track Registration Successful";
+        var body = $@"
+        Dear {fullName},<br><br>
+        You have successfully registered for the track <b>{trackName}</b>.<br>
+        We are excited to have you on board!<br><br>
+        Best Regards,<br>
+        College Track Team";
+
+        await _emailSender.SendEmailAsync(email, subject, body);
+    }
+
+    private async Task SendStatusUpdateEmailAsync(string email, string fullName, string status, string comments)
+    {
+        var subject = $"Track Registration {status.ToUpper()}";
+        var statusMessage = status == "approved" ? "has been <b>approved</b>" : "has been <b>rejected</b>";
+        var body = $@"
+        Dear {fullName},<br><br>
+        Your track registration {statusMessage}.<br>
+        <b>Admin Comments:</b> {comments}<br><br>
+        Best regards,<br>
+        College Track Team";
+
+        await _emailSender.SendEmailAsync(email, subject, body);
     }
 }
