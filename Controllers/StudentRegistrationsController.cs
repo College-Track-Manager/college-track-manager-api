@@ -50,7 +50,11 @@ public class StudentRegistrationsController : ControllerBase
             .FirstOrDefaultAsync(r => r.Email == currentUserEmail && r.AcademicYear == model.AcademicYear);
 
         if (existingRegistration != null)
-            return BadRequest(new { message = "You have already registered for a track this academic year." });
+            return BadRequest(new
+            {
+                error = "AlreadyRegistered",
+                message = "You have already registered for a track this academic year."
+            });
 
         string secureFolder = Path.Combine(_env.ContentRootPath, "SecureFiles", "uploads");
         Directory.CreateDirectory(secureFolder);
