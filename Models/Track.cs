@@ -25,11 +25,12 @@ namespace CollegeTrackAPI.Models
         Online = 2
 
     }
-    public enum StudentRegistrationType
+    public enum StudentRegistrationStatus
     {
         Pending = 0,
         Approved = 1,
-        Rejected = 2
+        Rejected = 2,
+        Processed = 3
     }
 
     public class Course
