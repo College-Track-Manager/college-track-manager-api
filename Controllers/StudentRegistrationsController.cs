@@ -48,7 +48,7 @@ public class StudentRegistrationsController : ControllerBase
 
         // Check if already registered this academic year
         var existingRegistration = await _context.Registrations
-            .FirstOrDefaultAsync(r => r.Email == currentUserEmail && r.AcademicYear == model.AcademicYear);
+            .FirstOrDefaultAsync(r => r.Email == currentUserEmail && r.AcademicYear == model.AcademicYear && r.Status != 2);
 
         if (existingRegistration != null)
             return BadRequest(new
@@ -317,7 +317,7 @@ public class StudentRegistrationsController : ControllerBase
         {
             await SendStatusUpdateEmailAsync(registration.Email, fullName, "approved", registration.AdminComments);
         }
-        else if (status == 3)
+        else if (status == 2)
         {
             await SendStatusUpdateEmailAsync(registration.Email, fullName, "rejected", registration.AdminComments);
         }
