@@ -1,5 +1,6 @@
 using CollegeTrackAPI.Models;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 public class StudentRegistration
 {
@@ -37,6 +38,9 @@ public class StudentRegistration
     public string? IdCardPath { get; set; } = "";
 
     public DateTime RegistrationDate { get; set; } = DateTime.UtcNow;
-    public int Status { get; set; } = 0; // 0 = Pening , 1 = Approved , 3 = Rejected
+    public int Status { get; set; } = 0; // 0 = Pening , 1 = Approved , 2 = Rejected
+    //public int StatusDesctiption { get; set; }
     public string? AdminComments { get; set; }
+    [NotMapped]
+    public string Name { get; set; } = "";
 }

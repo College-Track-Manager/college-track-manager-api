@@ -7,6 +7,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using CollegeTrackAPI.Services;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using CollegeTrackAPI.DTOs;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -99,56 +100,71 @@ public class StudentRegistrationsController : ControllerBase
     [HttpGet("profile")]
     public async Task<IActionResult> GetProfile()
     {
-        // Get current user's email from token
-        var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
-        if (string.IsNullOrEmpty(userEmail))
-            return Unauthorized("Email not found in token.");
-
-        // Fetch registration record using email
-        var student = await _context.Registrations
-            .Include(s => s.Track)
-                .ThenInclude(t => t.TrackCourses)
-                    .ThenInclude(tc => tc.Course)
-            .FirstOrDefaultAsync(s => s.Email == userEmail);
-
-        if (student == null)
-            return NotFound(new { message = "Student registration not found." });
-
-        // Fetch user profile from AspNetUsers
-        var user = await _userManager.FindByEmailAsync(userEmail);
-        if (user == null)
-            return NotFound(new { message = "User profile not found." });
-
-        await _auditService.LogActionAsync(User, "Read", "Profile", user.Id, $"Viewed profile of user {user.Email}");
-
-
-        return Ok(new
+        try
         {
-            FullName = user.FullName,
-            Email = user.Email,
-            Phone = user.Phone,
-            Address = user.Address,
-            student.TrackDegree,
-            student.TrackType,
-            student.StudyType,
-            student.Education,
-            student.Statement,
-            student.RegistrationDate,
-            Track = new
+            // Get current user's email from token
+            var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
+            if (string.IsNullOrEmpty(userEmail))
+                return Unauthorized("Email not found in token.");
+
+            // Fetch registration record using email
+            var student = await _context.Registrations
+                .Include(s => s.Track)
+                    .ThenInclude(t => t.TrackCourses)
+                        .ThenInclude(tc => tc.Course)
+                .FirstOrDefaultAsync(s => s.Email == userEmail);
+
+            if (student == null)
+                return NotFound(new { message = "Student registration not found." });
+
+            // Fetch user profile from AspNetUsers
+            var user = await _userManager.FindByEmailAsync(userEmail);
+            if (user == null)
+                return NotFound(new { message = "User profile not found." });
+
+            await _auditService.LogActionAsync(User, "Read", "Profile", user.Id, $"Viewed profile of user {user.Email}");
+
+            return Ok(new
             {
-                student.Track.Id,
-                student.Track.Title,
-                student.Track.ShortDescription,
-                student.Track.Duration
-            },
-            Courses = student.Track.TrackCourses.Select(tc => new
-            {
-                tc.Course.CourseCode,
-                tc.Course.Title,
-                tc.Course.Description,
-                tc.Course.Credits
-            })
-        });
+                FullName = user.FullName,
+                Email = user.Email,
+                Phone = user.Phone,
+                Address = user.Address,
+                student.TrackDegree,
+                student.TrackType,
+                student.StudyType,
+                student.Education,
+                student.Statement,
+                student.RegistrationDate,
+                student.Status,
+                StatusDesctiption = student.Status switch // Convert integer to string here
+                {
+                    0 => "قيد الدراسة",
+                    1 => "تم الموافقة",
+                    2 => "مرفوض",
+                    -1 => "لم يحدد" // Fallback for unexpected values
+                },
+                Track = new
+                {
+                    student.Track.Id,
+                    student.Track.Title,
+                    student.Track.ShortDescription,
+                    student.Track.Duration
+                },
+                Courses = student.Track.TrackCourses.Select(tc => new
+                {
+                    tc.Course.CourseCode,
+                    tc.Course.Title,
+                    tc.Course.Description,
+                    tc.Course.Credits
+                })
+            });
+        }
+        catch (Exception ex)
+        {
+
+            throw;
+        }
     }
 
     // Send Registration Email after successful registration
@@ -164,8 +180,8 @@ public class StudentRegistrationsController : ControllerBase
 
         await _emailSender.SendEmailAsync(email, subject, body);
     }
-    [HttpGet("GetStudentRegistratrion")]
-    public async Task<ActionResult<IEnumerable<object>>> GetStudentRegistratrion([FromQuery] StudentRegistrationType? studentRegistrationType)
+    [HttpGet("GetStudentRegistratrions")]
+    public async Task<ActionResult<IEnumerable<object>>> GetStudentRegistratrions([FromQuery] StudentRegistrationStatus? studentRegistrationType)
     {
         var query = _context.Registrations
             //.Include(t => t.Registrations)
@@ -174,13 +190,23 @@ public class StudentRegistrationsController : ControllerBase
 
         if (studentRegistrationType.HasValue)
         {
-            query = query.Where(t => t.Status ==(int)studentRegistrationType.Value);
+            if (studentRegistrationType == StudentRegistrationStatus.Pending)
+            {
+                query = query.Where(t => t.Status == (int)studentRegistrationType.Value);
+            }
+            else if (studentRegistrationType == StudentRegistrationStatus.Processed)
+            {
+                query = query.Where(t => t.Status != (int)StudentRegistrationStatus.Pending);
+            }            
         }
 
-        var result = await query.ToListAsync();
+        var studentRegistrationResult = await query.ToListAsync();      
+        
+        studentRegistrationResult.ForEach(x => x.Name = _userManager.FindByEmailAsync(x.Email)?.Result?.FullName);
 
-        return Ok(result);
+        return Ok(studentRegistrationResult);
     }
+
 
     [HttpGet("GetMyRegistrations")]
     public async Task<ActionResult<IEnumerable<object>>> GetMyRegistrations([FromQuery] string nationalId)
@@ -213,10 +239,53 @@ public class StudentRegistrationsController : ControllerBase
             return BadRequest();
         }
     }
+    [HttpGet("GetRegistrationById")]
+    public async Task<ActionResult<IEnumerable<object>>> GetRegistrationById([FromQuery] int id)
+    {
+        try
+        {
+            if (id <= 0)
+            {
+                return Ok("الرجاء ادخل رقم صحيح");
+            }
 
+            var query = _context.Registrations.Where(u => u.Id == id).Include(s => s.Track)
+                    .ThenInclude(t => t.TrackCourses)
+                        .ThenInclude(tc => tc.Course)
+                .FirstOrDefaultAsync();
+
+            var user = _context.Users.Where(u => u.Email == query.Result.Email).FirstOrDefault();
+
+
+            ApplicationDataDto application = new ApplicationDataDto();
+
+            application.Name = user.FullName;
+            application.SubmissionDate = query.Result.RegistrationDate.ToShortDateString();
+            application.TranscriptUrl = query.Result.TranscriptPath;
+            application.ResumeUrl = query.Result.ResumePath;
+            application.IdCardUrl = query.Result.IdCardPath;
+            application.EducationLevel = query.Result.Education;
+            application.Education = query.Result.Education;
+            application.StudyType = query.Result.StudyType.ToString();
+            application.Track = query.Result.Track.Title;
+            application.Email = user.Email;
+
+
+
+
+            if (query != null)
+                return Ok(application);
+            else
+                return Ok(" لا يوجد بيانات لرقم التسجيل ");
+        }
+        catch (Exception)
+        {
+            return BadRequest();
+        }
+    }
     //[Authorize(Roles = "Admin")]
     [HttpPut("UpdateStudentRegistration")]
-    public async Task<ActionResult<StudentRegistration>> UpdateStudentRegistration(int id,int status,string comments)
+    public async Task<ActionResult<StudentRegistration>> UpdateStudentRegistration(int id,int status,string? comments)
     {
         if (id <= 0)
         {

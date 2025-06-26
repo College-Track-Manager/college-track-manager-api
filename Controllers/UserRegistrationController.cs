@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using CollegeTrackAPI.Models; // Ensure ApplicationUser is imported
 using System.Threading.Tasks;
+using CollegeTrackAPI.Services;
 
 namespace CollegeTrackAPI.Controllers
 {
@@ -10,10 +11,12 @@ namespace CollegeTrackAPI.Controllers
     public class UserRegistrationController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly CollegeTrackAPI.Services.IEmailSender _emailSender;
 
-        public UserRegistrationController(UserManager<ApplicationUser> userManager)
+        public UserRegistrationController(UserManager<ApplicationUser> userManager, CollegeTrackAPI.Services.IEmailSender emailSender)
         {
             _userManager = userManager;
+            _emailSender = emailSender;
         }
 
         [HttpPost("register")]
@@ -42,6 +45,18 @@ namespace CollegeTrackAPI.Controllers
             var roleResult = await _userManager.AddToRoleAsync(user, "Student");
             if (!roleResult.Succeeded)
                 return BadRequest(new { message = "User created but failed to assign Student role", errors = roleResult.Errors });
+
+
+            var subject = "Track Registration Successful";
+            var body = $@"
+        Dear {user.UserName},<br><br>
+        Welcomwe to  <b>College of Graduate Studies and Statistical Research</b>.<br>
+We are excited to welcome you to our community!<br><br>
+        We are excited to have you on board!<br><br>
+        Best Regards,<br>
+        College Track Team";
+
+            await _emailSender.SendEmailAsync(user.Email, subject, body);
 
             return Ok(new { message = "Registration successful with Student role" });
         }
