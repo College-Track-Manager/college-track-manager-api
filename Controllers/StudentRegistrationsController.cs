@@ -116,7 +116,7 @@ public class StudentRegistrationsController : ControllerBase
                 .Include(s => s.Track)
                     .ThenInclude(t => t.TrackCourses)
                         .ThenInclude(tc => tc.Course)
-                .FirstOrDefaultAsync(s => s.Email == userEmail);
+                .LastOrDefaultAsync(s => s.Email == userEmail);
 
             if (student == null)
                 return NotFound(new { message = "Student registration not found." });
