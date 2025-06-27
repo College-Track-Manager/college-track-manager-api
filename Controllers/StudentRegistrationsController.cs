@@ -141,6 +141,7 @@ public class StudentRegistrationsController : ControllerBase
                 student.Statement,
                 student.RegistrationDate,
                 student.Status,
+                student.AdminComments,
                 StatusDesctiption = student.Status switch // Convert integer to string here
                 {
                     0 => "قيد الدراسة",
@@ -176,8 +177,7 @@ public class StudentRegistrationsController : ControllerBase
     public async Task<ActionResult<IEnumerable<object>>> GetStudentRegistratrions([FromQuery] StudentRegistrationStatus? studentRegistrationType)
     {
         var query = _context.Registrations
-            //.Include(t => t.Registrations)
-                /*ThenInclude(tc => tc.Course)*/
+            .Include(t => t.Track)
             .AsQueryable();
 
         if (studentRegistrationType.HasValue)
@@ -196,7 +196,29 @@ public class StudentRegistrationsController : ControllerBase
         
         studentRegistrationResult.ForEach(x => x.Name = _userManager.FindByEmailAsync(x.Email)?.Result?.FullName);
 
-        return Ok(studentRegistrationResult);
+        List<StudentRegistrationDto> studentRegistrations = new List<StudentRegistrationDto>();
+
+        foreach (var item in studentRegistrationResult)
+        {
+            StudentRegistrationDto s = new StudentRegistrationDto
+            {             
+                Id = item.Id,             
+                Name = item.Name,                
+                Email = item.Email,              
+                Track = item.Track.Title,
+                RegistrationDate = item.RegistrationDate.ToShortDateString(),
+                Education = item.Education,
+                Statement = item.Statement,
+                ResumePath = item.ResumePath,
+                TranscriptPath = item.TranscriptPath,
+                IdCardPath = item.IdCardPath,             
+                Status = item.Status
+            };
+            studentRegistrations.Add(s);
+        }
+        
+
+        return Ok(studentRegistrations);
     }
 
 
@@ -252,7 +274,7 @@ public class StudentRegistrationsController : ControllerBase
             ApplicationDataDto application = new ApplicationDataDto();
 
             application.Name = user.FullName;
-            application.SubmissionDate = query.Result.RegistrationDate.ToShortDateString();
+            application.SubmissionDate = query.Result.RegistrationDate.ToString();
             application.TranscriptUrl = query.Result.TranscriptPath;
             application.ResumeUrl = query.Result.ResumePath;
             application.IdCardUrl = query.Result.IdCardPath;
@@ -261,6 +283,9 @@ public class StudentRegistrationsController : ControllerBase
             application.StudyType = query.Result.StudyType.ToString();
             application.Track = query.Result.Track.Title;
             application.Email = user.Email;
+            application.TrackDegree = (int)query.Result.TrackDegree == 1 ? "دبلومة": 
+                                      (int)query.Result.TrackDegree == 2 ? "ماجسستير" :
+                                      "دكتوراة";
 
 
 

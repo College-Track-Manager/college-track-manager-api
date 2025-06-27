@@ -11,8 +11,9 @@
         public string TrackType { get; set; } // "academic" or "professional"
 
         public string Track { get; set; }
+        public string TrackDegree { get; set; }
 
-       
+
         public string EducationLevel { get; set; }
 
        
