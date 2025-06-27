@@ -286,6 +286,7 @@ public class StudentRegistrationsController : ControllerBase
             application.TrackDegree = (int)query.Result.TrackDegree == 1 ? "دبلومة": 
                                       (int)query.Result.TrackDegree == 2 ? "ماجسستير" :
                                       "دكتوراة";
+            application.Statement = query.Result.Statement;
 
 
 
