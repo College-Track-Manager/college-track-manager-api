@@ -115,7 +115,7 @@ public class StudentRegistrationsController : ControllerBase
             var student = await _context.Registrations
                 .Include(s => s.Track)
                     .ThenInclude(t => t.TrackCourses)
-                        .ThenInclude(tc => tc.Course)
+                        .ThenInclude(tc => tc.Course).OrderBy(x => x.RegistrationDate)
                 .LastOrDefaultAsync(s => s.Email == userEmail);
 
             if (student == null)
